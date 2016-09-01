@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Car Following 101</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-slider.css" rel="stylesheet">
+    <link href="css/demo.css" rel="stylesheet">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap-slider.js"></script>
+    <script src="js/modernizr.js"></script>
+    <script src="js/track.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/car-status.js"></script>
+    <script src="js/sys-status.js"></script>
+  </head>
+
+  <body>
+
+    <div class="wrapper">
+      <div class="header">
+        <h2><center>W99 Car Following Model - How It Works</center></h2>
+        <p>
+          <center>
+          A demonstration of Wiedemann 99 <a target="_blank" href="https://en.wikipedia.org/wiki/Microscopic_traffic_flow_model">Car Following Model</a>, inspired by <a target="_blank" href="https://youtu.be/7wm-pZp_mi0">this</a> video.
+          Created by <a target="_blank" href="https://www.linkedin.com/in/liugh">Guanghui Liu</a>.
+          </center>
+        </p>
+        <hr>
+      </div>
+
+      <div class="column-wrapper">
+        <div class="column-left">
+          <div class="well">
+            <h4>Simulation Control</h4>
+            <button type="button" class="btn btn-success" id="btn_start">Start</button>
+            <button type="button" class="btn btn-success" id="btn_step">Step Forward</button>
+            <button type="button" class="btn btn-warning" id="btn_pause">Pause</button>
+            <button type="button" class="btn btn-danger" id="btn_reset">Reset</button>
+          </div>
+          <div class="well">
+            <h4>Vehicles and Drivers</h4>
+            <h5>Number of Cars</h5>
+            <div class="btn-group" id="form_cars_n" data-toggle="buttons" name='form_cars_n'>
+              <label class="btn btn-default" id="btn_cars_n_4" value=4>
+                <input type="radio"> 4
+              </label>
+              <label class="btn btn-default" id="btn_cars_n_8" value=8>
+                <input type="radio"> 8
+              </label>
+              <label class="btn btn-default active" id="btn_cars_n_12" value=12>
+                <input type="radio" checked> 12
+              </label>
+              <label class="btn btn-default" id="btn_cars_n_16" value=16>
+                <input type="radio"> 16
+              </label>
+            </div>
+
+            <h5>Spacing</h5>
+            <div class="btn-group" id="form_cars_spacing" data-toggle="buttons" value='form_cars_spacing'>
+              <label class="btn btn-default" id="btn_cars_spacing_even" value='even'>
+                <input type="radio"> Evenly Spaced
+              </label>
+              <label class="btn btn-default active" id="btn_cars_spacing_close" value='close'>
+                <input type="radio" checked> Closely Lined Up
+              </label>
+            </div>
+          </div>
+
+          <div class="well">
+            <h4>Model Parameters</h4>
+
+            <button type="button" class="btn btn-default" id="btn_w99_default">Reset Default</button>
+            <!-- <button type="button" class="btn btn-default" id="btn_w99_aggressive">Aggressive</button>
+            <button type="button" class="btn btn-default" id="btn_w99_conservative">Conservative</button> -->
+
+            <p style="line-height: 1.8">
+            <br>
+            cc0: Standstill Distance - m <br>
+            <input class="slider" id="slider_cc0" type="text" data-slider-min="0.5" data-slider-max="5.0" data-slider-step="0.1" data-slider-value="1.5"/>
+            <br>
+            cc1: Spacing Time - sec <br>
+            <input class="slider" id="slider_cc1" type="text" data-slider-min="0.5" data-slider-max="2.5" data-slider-step="0.1" data-slider-value="1.3"/>
+            <br>
+            cc2: Following Variation - m <br>
+            <input class="slider" id="slider_cc2" type="text" data-slider-min="1.0" data-slider-max="10.0" data-slider-step="0.5" data-slider-value="4.0"/>
+            <br>
+            cc3: Threshold for Entering "Following" - sec <br>
+            <input class="slider" id="slider_cc3" type="text" data-slider-min="-20.00" data-slider-max="-5.00" data-slider-step="1.0" data-slider-value="-12.0"/>
+            <br>
+            cc4: Negative "Following" Threshold - m/s <br>
+            <input class="slider" id="slider_cc4" type="text" data-slider-min="-3.0" data-slider-max="-0.1" data-slider-step="0.1" data-slider-value="-0.25"/>
+            <br>
+            cc5: Positive "Following" Threshold - m/s <br>
+            <input class="slider" id="slider_cc5" type="text" data-slider-min="0.1" data-slider-max="3.0" data-slider-step="0.1" data-slider-value="0.35"/>
+            <br>
+            cc6: Speed Dependency of Oscillation - 10^-4 rad/s <br>
+            <input class="slider" id="slider_cc6" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="0.5" data-slider-value="6"/>
+            <br>
+            cc7: Oscillation Acceleration - m/s^2 <br>
+            <input class="slider" id="slider_cc7" type="text" data-slider-min="0.05" data-slider-max="1.0" data-slider-step="0.05" data-slider-value="0.25"/>
+            <br>
+            cc8: Standstill Acceleration - m/s^2 <br>
+            <input class="slider" id="slider_cc8" type="text" data-slider-min="0.5" data-slider-max="5.0" data-slider-step="0.25" data-slider-value="2.0"/>
+            <br>
+            cc9: Acceleration at 80km/h - m/s^2 <br>
+            <input class="slider" id="slider_cc9" type="text" data-slider-min="0.5" data-slider-max="5.0" data-slider-step="0.25" data-slider-value="1.5"/>
+            <br>
+          </p>
+          </div>
+
+        </div>
+
+        <div class="column-middle">
+          <div class="well">
+            <h4>Simulation</h4>
+            <center><canvas id="track" width="400" height="400"></canvas></center>
+          </div>
+          <div class="well">
+            <h4>System Status</h4>
+            <p id="system_status_msg"></p>
+            <p id="system_status_v_avg"></p>
+          </div>
+        </div>
+
+        <div class="column-right">
+          <div class="well">
+            <h4>Vehicle Status</h4>
+            <br>
+            <div id="status_panel"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function setStatusCanvas(n){
+        var status_panel = document.getElementById("status_panel")
+
+        //remove all existing canvas
+        next_child = status_panel.firstChild;
+        while(next_child) {
+            status_panel.removeChild(next_child);
+            next_child = status_panel.firstChild;
+        }
+        //create new canvas
+        for (var i = 0; i < n; i++) {
+          var new_canvas = document.createElement("canvas");
+          new_canvas.id = "status" + (i+1).toString();
+          new_canvas.width = STATUS_CANVAS_WIDTH;
+          new_canvas.height = STATUS_CANVAS_HEIGHT;
+          status_panel.appendChild(new_canvas);
+        }
+      }
+
+      function applyW99Parameters(w99_parameters){
+         for (var i = 0; i < 10; i++) {
+           $("#slider_cc" + i.toString()).slider('setValue' , w99_parameters['cc' + i.toString()], true, true)
+         }
+      }
+
+      const DEFAULT_N_CAR = 12;
+      const DEFAULT_SPACING = 16.5;
+
+      $(document).ready(function(){
+        var model = new w99(W99_DEFAULT);
+        setStatusCanvas(DEFAULT_N_CAR);
+        model.setCars(DEFAULT_N_CAR, DEFAULT_SPACING);
+
+        $("#btn_start").click(function(){
+          model.simRunContinous();
+          $("label[id^='btn_cars_']").attr( "disabled", true);
+        });
+        $("#btn_step").click(function(){
+          model.simRunStep();
+          $("label[id^='btn_cars_']").attr( "disabled", true);
+        });
+        $("#btn_pause").click(function(){
+          model.simPause();
+        });
+        $("#btn_reset").click(function(){
+          model.simReset();
+          $("label[id^='btn_cars_']").attr( "disabled", false);
+        });
+
+        $("#btn_w99_default").click(function(){
+          applyW99Parameters(W99_DEFAULT)
+        });
+        // $("#btn_w99_aggressive").click(function(){
+        //   applyW99Parameters(W99_AGGRESSIVE)
+        // });
+        // $("#btn_w99_conservative").click(function(){
+        //   applyW99Parameters(W99_CONSERVATIVE)
+        // });
+
+        //use click event - not change - change doesn't fire every time
+        $("label[id^='btn_cars_']").click(function(e){
+          if (e.target.getAttribute("disabled") === "disabled") {return};
+          var value = this.getAttribute('value');
+          var n_car = model.cars.length; //default n_car
+          var spacing = model.spacing; //default spacing
+          if (value === "even") {
+            spacing = undefined;
+          } else if (value === "close") {
+            spacing = DEFAULT_SPACING;
+          } else {
+            n_car = +this.getAttribute('value');
+          }
+          setStatusCanvas(n_car);
+          model.setCars(n_car, spacing);
+        });
+
+        // Activate Sliders
+        $(".slider").slider({
+        });
+        $(".slider").on('slideStop', function(e){
+          var cc_id = e.currentTarget['id'].slice(-3);
+          var cc_value = e.value;
+          model.parameters[cc_id] = cc_value;
+        });
+        applyW99Parameters(W99_DEFAULT); //Set Slider Status
+
+      });
+
+    </script>
+
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+  </body>
+</html>

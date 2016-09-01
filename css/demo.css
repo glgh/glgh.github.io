@@ -1,0 +1,51 @@
+/*Page Layout*/
+.wrapper{
+   margin: 25px;
+}
+.column-wrapper{
+   float: left;
+   width: 100%;
+   min-width: 1190px;
+}
+.column-left{
+   float: left;
+   width: 375px;
+   padding-right: 15px;
+}
+.column-middle{
+   float: left;
+   width: 450px;
+   padding-right: 15px;
+}
+.column-right{
+   float: none;
+   margin-left: 825px;
+   #width: 100%
+   min-width: 365px;
+   padding-right: 15px;
+ }
+.header{
+   float: left;
+   width: 100%;
+}
+.footer{
+   float: left;
+   width: 100%;
+}
+
+/*Slider Control*/
+.slider{
+  width: 300px;
+}
+
+.slider-handle {
+	background: grey;
+}
+
+.slider-selection{
+  background: white;
+}
+
+.slider-track-high{
+	background: white;
+}
