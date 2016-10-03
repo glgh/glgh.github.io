@@ -5,7 +5,7 @@
 .column-wrapper{
    float: left;
    width: 100%;
-   min-width: 1190px;
+   min-width: 1500px;
 }
 .column-left{
    float: left;
@@ -20,13 +20,14 @@
 .column-right{
    float: none;
    margin-left: 810px;
-   #width: 100%
-   min-width: 365px;
+   /*width: 100%;*/
+   min-width: 685px;
    padding-right: 15px;
  }
 .header{
    float: left;
    width: 100%;
+   min-width: 1500px;
 }
 .footer{
    float: left;
